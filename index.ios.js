@@ -5,10 +5,12 @@
 'use strict';
 
 var React = require('react-native');
-
+var DreamTab = require('./dream-tab.ios');
+var MeTab = require('./me-tab.ios');
 var {
   AppRegistry,
   StyleSheet,
+  TabBarIOS,
   Image,
   ListView,
   Text,
@@ -23,6 +25,7 @@ var DreamReact = React.createClass({
         rowHasChanged:(row1, row2) => row1 !== row2,
       }),
       loaded: false,
+      selectedTab: 'dream'
     };
   },
 
@@ -45,11 +48,34 @@ var DreamReact = React.createClass({
       return this.renderLoadingView(); 
     }
     return (
-      <ListView 
-        dataSource={this.state.dataSource}
-        renderRow={this.renderDreams}
-        style={styles.listView}>
-      </ListView>
+      <TabBarIOS selectedTab={this.state.selectedTab}>
+        <TabBarIOS.Item 
+          style={styles.tab}
+          title="梦想"
+          selected={this.state.selectedTab ==='dream'}
+          onPress={()=>{
+            this.setState({
+              selectedTab: 'dream'
+            });
+          }}>
+          <ListView 
+            dataSource={this.state.dataSource}
+            renderRow={this.renderDreams}
+            style={styles.listView}>
+          </ListView>
+        </TabBarIOS.Item>
+
+        <TabBarIOS.Item
+          title="我"
+          selected={this.state.selectedTab ==='me'}
+          onPress={()=>{
+            this.setState({
+              selectedTab: 'me'
+            });
+          }}>
+          <MeTab/>
+        </TabBarIOS.Item>
+      </TabBarIOS>
     );
   },
   
@@ -80,6 +106,9 @@ var styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
     height: 100
   },
+  tab:{
+    padding: 20
+  },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
@@ -95,7 +124,6 @@ var styles = StyleSheet.create({
     textAlign: 'left',
   },
   listView: {
-    paddingTop:20 
   }
 });
 
