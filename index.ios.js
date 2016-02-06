@@ -7,10 +7,15 @@
 var React = require('react-native');
 var DreamTab = require('./dream-tab.ios');
 var MeTab = require('./me-tab.ios');
+var Icon = require('react-native-vector-icons/Ionicons');
 var {
   AppRegistry,
   StyleSheet,
   TabBarIOS,
+  TouchableHighlight,
+  StatusBarIOS,
+  NavigatorIOS,
+  ActivityIndicatorIOS,
   Image,
   ListView,
   Text,
@@ -30,6 +35,7 @@ var DreamReact = React.createClass({
   },
 
   componentDidMount: function(){
+    Icon.getImageSource('ios-gear', 30).then((source) => this.setState({ gearIcon: source })); 
     this.fetchData(); 
   },
   fetchData: function(){
@@ -49,10 +55,12 @@ var DreamReact = React.createClass({
     }
     return (
       <TabBarIOS selectedTab={this.state.selectedTab}>
-        <TabBarIOS.Item 
+        <Icon.TabBarItem 
           style={styles.tab}
           title="梦想"
           selected={this.state.selectedTab ==='dream'}
+          iconName="ios-home"
+          selectedIconName="ios-home"
           onPress={()=>{
             this.setState({
               selectedTab: 'dream'
@@ -63,11 +71,13 @@ var DreamReact = React.createClass({
             renderRow={this.renderDreams}
             style={styles.listView}>
           </ListView>
-        </TabBarIOS.Item>
+        </Icon.TabBarItem>
 
         <TabBarIOS.Item
+          systemIcon="history"
           title="我"
           selected={this.state.selectedTab ==='me'}
+          icon={{uri:'contacts'}}
           onPress={()=>{
             this.setState({
               selectedTab: 'me'
@@ -82,10 +92,7 @@ var DreamReact = React.createClass({
   renderLoadingView: function(){
     return (
       <View style={styles.container}>
-        <Text>
-          Loading dreams...
-
-        </Text>
+        <ActivityIndicatorIOS size="large"/>
       </View> 
     ); 
   },
@@ -107,7 +114,7 @@ var styles = StyleSheet.create({
     height: 100
   },
   tab:{
-    padding: 20
+    padding: 20,
   },
   welcome: {
     fontSize: 20,
@@ -124,6 +131,18 @@ var styles = StyleSheet.create({
     textAlign: 'left',
   },
   listView: {
+  },
+  wrapper: {
+    borderRadius: 5,
+    marginBottom: 5,
+  },
+  button: {
+    backgroundColor: '#eeeeee',
+    padding: 10,
+  },
+  icon:{
+    height: 10,
+    width: 10
   }
 });
 
